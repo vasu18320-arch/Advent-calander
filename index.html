@@ -1,145 +1,167 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Advent Calendar</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #111;
-      color: #fff;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #2a1d14, #0f0b08);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
       display: flex;
       justify-content: center;
+      align-items: center;
+      color: #fff;
     }
+
     .container {
       width: 100%;
-      max-width: 420px; /* mobile-first */
-      padding: 12px;
-    }/* FRONT PAGE */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-.day-btn {
-  background: #2b1d12;
-  border-radius: 10px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: #f5e6d3;
-  box-shadow: 0 6px 0 #1a120b;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  cursor: pointer;
-  user-select: none;
-}
-.day-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 2px 0 #1a120b;
-}
+      max-width: 420px;
+      padding: 16px;
+    }
 
-/* PAGES */
-.page {
-  display: none;
-  text-align: center;
-}
-.page img {
-  width: 100%;
-  border-radius: 12px;
-}
-.back {
-  margin: 12px 0;
-  padding: 8px 14px;
-  background: #333;
-  border-radius: 8px;
-  display: inline-block;
-  cursor: pointer;
-}
+    h1 {
+      text-align: center;
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
 
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    /* WOOD BUTTON */
+    .day {
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(145deg, #e6d3b1, #c9ad82);
+      border-radius: 14px;
+      box-shadow:
+        0 6px 12px rgba(0,0,0,0.35),
+        inset 0 -2px 3px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #3a2716;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      user-select: none;
+    }
+
+    .day:active {
+      transform: translateY(3px);
+      box-shadow:
+        0 2px 5px rgba(0,0,0,0.3),
+        inset 0 2px 4px rgba(0,0,0,0.25);
+    }
+
+    /* POPUP */
+    .popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .popup img {
+      max-width: 92%;
+      max-height: 92%;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    }
+
+    .popup:active {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
-  <div class="container"><!-- FRONT PAGE -->
-<div id="front" class="grid"></div>
+  <div class="container">
+    <h1>✨ Advent Calendar ✨</h1>
 
-<!-- CONTENT PAGE -->
-<div id="content" class="page">
-  <div class="back" onclick="goBack()">← Back</div>
-  <div id="contentBody"></div>
-</div>
+    <div class="grid">
+      <div class="day" onclick="openDay(1)">1</div>
+      <div class="day" onclick="openDay(2)">2</div>
+      <div class="day" onclick="openDay(3)">3</div>
+      <div class="day" onclick="openDay(4)">4</div>
+      <div class="day" onclick="openDay(5)">5</div>
+      <div class="day" onclick="openDay(6)">6</div>
+      <div class="day" onclick="openDay(7)">7</div>
+      <div class="day" onclick="openDay(8)">8</div>
+      <div class="day" onclick="openDay(9)">9</div>
+      <div class="day" onclick="openDay(10)">10</div>
+      <div class="day" onclick="openDay(11)">11</div>
+      <div class="day" onclick="openDay(12)">12</div>
+    </div>
+  </div>
 
-<!-- AUDIO -->
-<audio id="bgMusic" loop src="lofi.mp3"></audio>
-<audio id="voiceNote" src="advent calendar.m4a"></audio>
-<audio id="clickSound" src="wood-click.mp3"></audio>
+  <!-- IMAGE POPUP -->
+  <div class="popup" id="popup" onclick="closePopup()">
+    <img id="popup-img" src="">
+  </div>
 
-  </div>  <script>
-    const front = document.getElementById('front');
-    const content = document.getElementById('content');
-    const body = document.getElementById('contentBody');
-    const bgMusic = document.getElementById('bgMusic');
-    const voice = document.getElementById('voiceNote');
-    const clickSound = document.getElementById('clickSound');
+  <script>
+    const bgMusic = new Audio("lofi.mp3");
+    const clickSound = new Audio("wood-click.mp3");
+    const voiceNote = new Audio("advent calendar.m4a");
 
+    bgMusic.loop = true;
     bgMusic.volume = 0.4;
-    clickSound.volume = 0.2;
+    clickSound.volume = 0.6;
+    voiceNote.volume = 1;
 
-    const pages = {
-      1: 'audio',
-      2: 'day2.png',
-      3: 'day3.png',
-      4: 'day4.png',
-      5: 'day5.png',
-      6: 'day6.png',
-      7: 'day7.png',
-      8: 'day8.png',
-      9: 'day9.jpg',
-      10: 'day10.png',
-      11: 'day11.png',
-      12: 'day12.jpg'
-    };
-
-    for (let i = 1; i <= 12; i++) {
-      const btn = document.createElement('div');
-      btn.className = 'day-btn';
-      btn.textContent = i;
-      btn.onclick = () => openDay(i);
-      front.appendChild(btn);
-    }
+    // Start background music after first interaction
+    document.body.addEventListener("click", () => {
+      if (bgMusic.paused) bgMusic.play();
+    }, { once: true });
 
     function openDay(day) {
       clickSound.currentTime = 0;
       clickSound.play();
 
-      front.style.display = 'none';
-      content.style.display = 'block';
-      body.innerHTML = '';
-
-      if (pages[day] === 'audio') {
+      // DAY 1 → VOICE NOTE ONLY
+      if (day === 1) {
         bgMusic.pause();
-        voice.currentTime = 0;
-        voice.play();
-        voice.onended = () => bgMusic.play();
-      } else {
-        const img = document.createElement('img');
-        img.src = pages[day];
-        body.appendChild(img);
+        bgMusic.currentTime = 0;
+
+        voiceNote.currentTime = 0;
+        voiceNote.play();
+
+        voiceNote.onended = () => {
+          bgMusic.play();
+        };
+        return;
       }
+
+      // IMAGE DAYS
+      const img = (day === 9 || day === 12)
+        ? `day${day}.jpg`
+        : `day${day}.png`;
+
+      document.getElementById("popup-img").src = img;
+      document.getElementById("popup").style.display = "flex";
     }
 
-    function goBack() {
-      content.style.display = 'none';
-      front.style.display = 'grid';
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
     }
-
-    // Start music on first interaction
-    document.body.addEventListener('click', () => {
-      if (bgMusic.paused) bgMusic.play();
-    }, { once: true });
-  </script></body>
-  </html>
+  </script>
+</body>
+</html>
