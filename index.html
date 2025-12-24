@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Advent Calendar</title>
 
 <style>
@@ -10,17 +10,34 @@
 
 body {
   margin: 0;
-  background: #0f0b08;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  background: #0f0f0f;
+  color: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
   display: flex;
   justify-content: center;
-  color: #fff;
 }
 
 .container {
   width: 100%;
   max-width: 420px;
   padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.header img {
+  width: 50px;
+  height: auto;
+}
+
+.header h1 {
+  font-size: 22px;
+  margin: 0;
 }
 
 .grid {
@@ -30,75 +47,104 @@ body {
 }
 
 .day {
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(145deg, #e6d3b1, #c9ad82);
-  border-radius: 14px;
-  box-shadow:
-    0 6px 12px rgba(0,0,0,0.35),
-    inset 0 -2px 3px rgba(0,0,0,0.25);
+  aspect-ratio: 1/1;
+  background: linear-gradient(145deg, #1f1f1f, #141414);
+  border-radius: 16px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   font-size: 22px;
-  font-weight: 600;
-  color: #3a2716;
   cursor: pointer;
-  transition: transform 0.12s ease;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+  transition: transform 0.15s ease;
 }
 
 .day:active {
-  transform: translateY(3px);
+  transform: scale(0.95);
 }
 
-.popup {
+.modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.85);
   display: none;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
-.popup img {
-  max-width: 92%;
-  max-height: 92%;
-  border-radius: 12px;
+.modal img {
+  max-width: 90%;
+  max-height: 85%;
+  border-radius: 14px;
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 26px;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 <div class="container">
+
+  <div class="header">
+    <img src="front.png" alt="Santa">
+    <h1>Advent Calendar</h1>
+  </div>
+
   <div class="grid">
-    <div class="day" onclick="openDay(1)">1</div>
-    <div class="day" onclick="openDay(2)">2</div>
-    <div class="day" onclick="openDay(3)">3</div>
-    <div class="day" onclick="openDay(4)">4</div>
-    <div class="day" onclick="openDay(5)">5</div>
-    <div class="day" onclick="openDay(6)">6</div>
-    <div class="day" onclick="openDay(7)">7</div>
-    <div class="day" onclick="openDay(8)">8</div>
-    <div class="day" onclick="openDay(9)">9</div>
-    <div class="day" onclick="openDay(10)">10</div>
-    <div class="day" onclick="openDay(11)">11</div>
-    <div class="day" onclick="openDay(12)">12</div>
+    <div class="day" data-day="1">1</div>
+    <div class="day" data-day="2">2</div>
+    <div class="day" data-day="3">3</div>
+    <div class="day" data-day="4">4</div>
+    <div class="day" data-day="5">5</div>
+    <div class="day" data-day="6">6</div>
+    <div class="day" data-day="7">7</div>
+    <div class="day" data-day="8">8</div>
+    <div class="day" data-day="9">9</div>
+    <div class="day" data-day="10">10</div>
+    <div class="day" data-day="11">11</div>
+    <div class="day" data-day="12">12</div>
   </div>
 </div>
 
-<div class="popup" id="popup" onclick="closePopup()">
-  <img id="popup-img">
+<div class="modal" id="modal">
+  <div class="close" onclick="closeModal()">✕</div>
+  <img id="modalImg" />
 </div>
 
+<audio id="mainAudio" src="advent calendar.mp3" loop></audio>
+
 <script>
-const bgMusic = new Audio("lofi.mp3");
-const voiceNote = new Audio("advent calendar.m4a");
-const clickSound = new Audio("wood-click.mp3");
+const audio = document.getElementById("mainAudio");
+let audioStarted = false;
 
-bgMusic.loop = true;
-bgMusic.volume = 0.2;   // 🔴 VERY LOW BASE
-voiceNote.volume = 1;
-clickSound.volume = 0.5;
+document.querySelectorAll(".day").forEach(day => {
+  day.addEventListener("click", () => {
+    const num = day.dataset.day;
 
-// autoplay after first touch
-document.body.addEventListener("click", () => {
-  if (
+    // START AUDIO ONLY ON DAY 1
+    if (num === "1" && !audioStarted) {
+      audio.play();
+      audioStarted = true;
+    }
+
+    // DAY 9 & 12 ARE JPG, REST PNG
+    const ext = (num === "9" || num === "12") ? "jpg" : "png";
+    document.getElementById("modalImg").src = `day${num}.${ext}`;
+    document.getElementById("modal").style.display = "flex";
+  });
+});
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
