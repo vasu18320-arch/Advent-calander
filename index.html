@@ -1,167 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advent Calendar</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advent Calendar</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #2a1d14, #0f0b08);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-    }
+body {
+  margin: 0;
+  background: #111;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
 
-    .container {
-      width: 100%;
-      max-width: 420px;
-      padding: 16px;
-    }
+/* MAIN CONTAINER */
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 18px;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
+/* FRONT IMAGE */
+.front {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
 
-    /* GRID */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
+.front img {
+  width: 100%;
+  display: block;
+}
 
-    /* WOOD BUTTON */
-    .day {
-      aspect-ratio: 1 / 1;
-      background: linear-gradient(145deg, #e6d3b1, #c9ad82);
-      border-radius: 14px;
-      box-shadow:
-        0 6px 12px rgba(0,0,0,0.35),
-        inset 0 -2px 3px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: 600;
-      color: #3a2716;
-      cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
-      user-select: none;
-    }
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
 
-    .day:active {
-      transform: translateY(3px);
-      box-shadow:
-        0 2px 5px rgba(0,0,0,0.3),
-        inset 0 2px 4px rgba(0,0,0,0.25);
-    }
+/* BUTTON STYLE */
+.day {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 12px;
+  height: 90px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 
-    /* POPUP */
-    .popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
+  box-shadow:
+    0 6px 12px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 
-    .popup img {
-      max-width: 92%;
-      max-height: 92%;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    }
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
 
-    .popup:active {
-      display: none;
-    }
-  </style>
+.day:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* POPUP */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup img {
+  width: 92%;
+  max-width: 420px;
+  border-radius: 14px;
+}
+
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>✨ Advent Calendar ✨</h1>
+<div class="container">
 
-    <div class="grid">
-      <div class="day" onclick="openDay(1)">1</div>
-      <div class="day" onclick="openDay(2)">2</div>
-      <div class="day" onclick="openDay(3)">3</div>
-      <div class="day" onclick="openDay(4)">4</div>
-      <div class="day" onclick="openDay(5)">5</div>
-      <div class="day" onclick="openDay(6)">6</div>
-      <div class="day" onclick="openDay(7)">7</div>
-      <div class="day" onclick="openDay(8)">8</div>
-      <div class="day" onclick="openDay(9)">9</div>
-      <div class="day" onclick="openDay(10)">10</div>
-      <div class="day" onclick="openDay(11)">11</div>
-      <div class="day" onclick="openDay(12)">12</div>
-    </div>
+  <!-- FRONT IMAGE -->
+  <div class="front">
+    <img src="front.png" alt="Advent Calendar">
   </div>
 
-  <!-- IMAGE POPUP -->
-  <div class="popup" id="popup" onclick="closePopup()">
-    <img id="popup-img" src="">
+  <!-- BUTTON GRID -->
+  <div class="grid">
+    <div class="day" onclick="openDay(1)">1</div>
+    <div class="day" onclick="openDay(2)">2</div>
+    <div class="day" onclick="openDay(3)">3</div>
+    <div class="day" onclick="openDay(4)">4</div>
+    <div class="day" onclick="openDay(5)">5</div>
+    <div class="day" onclick="openDay(6)">6</div>
+    <div class="day" onclick="openDay(7)">7</div>
+    <div class="day" onclick="openDay(8)">8</div>
+    <div class="day" onclick="openDay(9)">9</div>
+    <div class="day" onclick="openDay(10)">10</div>
+    <div class="day" onclick="openDay(11)">11</div>
+    <div class="day" onclick="openDay(12)">12</div>
   </div>
 
-  <script>
-    const bgMusic = new Audio("lofi.mp3");
-    const clickSound = new Audio("wood-click.mp3");
-    const voiceNote = new Audio("advent calendar.m4a");
+</div>
 
-    bgMusic.loop = true;
-    bgMusic.volume = 0.4;
-    clickSound.volume = 0.6;
-    voiceNote.volume = 1;
+<!-- IMAGE POPUP -->
+<div class="popup" id="popup" onclick="closePopup()">
+  <img id="popup-img" src="">
+</div>
 
-    // Start background music after first interaction
-    document.body.addEventListener("click", () => {
-      if (bgMusic.paused) bgMusic.play();
-    }, { once: true });
+<script>
+/* AUDIO */
+const bgMusic = new Audio("lofi.mp3");
+const clickSound = new Audio("wood-click.mp3");
+const voiceNote = new Audio("advent calendar.m4a");
 
-    function openDay(day) {
-      clickSound.currentTime = 0;
-      clickSound.play();
+bgMusic.loop = true;
+bgMusic.volume = 0.4;
 
-      // DAY 1 → VOICE NOTE ONLY
-      if (day === 1) {
-        bgMusic.pause();
-        bgMusic.currentTime = 0;
+/* Start background music after first interaction */
+document.body.addEventListener("click", () => {
+  if (bgMusic.paused) bgMusic.play();
+}, { once: true });
 
-        voiceNote.currentTime = 0;
-        voiceNote.play();
+/* MAIN FUNCTION */
+function openDay(day) {
+  clickSound.currentTime = 0;
+  clickSound.play();
 
-        voiceNote.onended = () => {
-          bgMusic.play();
-        };
-        return;
-      }
+  // DAY 1 → VOICE NOTE
+  if (day === 1) {
+    voiceNote.currentTime = 0;
+    bgMusic.volume = 0.3; // duck background
+    voiceNote.play();
 
-      // IMAGE DAYS
-      const img = (day === 9 || day === 12)
-        ? `day${day}.jpg`
-        : `day${day}.png`;
+    voiceNote.onended = () => {
+      bgMusic.volume = 0.4;
+    };
+    return;
+  }
 
-      document.getElementById("popup-img").src = img;
-      document.getElementById("popup").style.display = "flex";
-    }
+  // IMAGE DAYS
+  const img = (day === 9 || day === 12)
+    ? `day${day}.jpg`
+    : `day${day}.png`;
 
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-    }
-  </script>
+  document.getElementById("popup-img").src = img;
+  document.getElementById("popup").style.display = "flex";
+}
+
+/* CLOSE POPUP */
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+</script>
+
 </body>
 </html>
