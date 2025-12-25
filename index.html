@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,12 +41,14 @@ body {
   margin: 0;
 }
 
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
+/* BUTTONS */
 .day {
   aspect-ratio: 1/1;
   background: linear-gradient(145deg, #1f1f1f, #141414);
@@ -63,6 +66,7 @@ body {
   transform: scale(0.95);
 }
 
+/* MODAL */
 .modal {
   position: fixed;
   inset: 0;
@@ -93,7 +97,7 @@ body {
 <div class="container">
 
   <div class="header">
-    <img src="front.png" alt="Santa">
+    <img src="front.png" alt="Front">
     <h1>Advent Calendar</h1>
   </div>
 
@@ -111,31 +115,44 @@ body {
     <div class="day" data-day="11">11</div>
     <div class="day" data-day="12">12</div>
   </div>
+
 </div>
 
+<!-- POPUP -->
 <div class="modal" id="modal">
   <div class="close" onclick="closeModal()">✕</div>
   <img id="modalImg" />
 </div>
 
+<!-- AUDIO -->
 <audio id="mainAudio" src="advent calendar.mp3" loop></audio>
+<audio id="clickSound" src="wood-click.mp3"></audio>
 
 <script>
 const audio = document.getElementById("mainAudio");
+const clickSound = document.getElementById("clickSound");
+
+clickSound.volume = 0.9;
+
 let audioStarted = false;
 
 document.querySelectorAll(".day").forEach(day => {
   day.addEventListener("click", () => {
     const num = day.dataset.day;
 
-    // START AUDIO ONLY ON DAY 1
+    // play wood click first
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    // start main audio only on day 1 (once)
     if (num === "1" && !audioStarted) {
       audio.play();
       audioStarted = true;
     }
 
-    // DAY 9 & 12 ARE JPG, REST PNG
+    // handle jpg for 9 & 12
     const ext = (num === "9" || num === "12") ? "jpg" : "png";
+
     document.getElementById("modalImg").src = `day${num}.${ext}`;
     document.getElementById("modal").style.display = "flex";
   });
